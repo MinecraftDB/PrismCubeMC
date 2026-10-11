@@ -1,0 +1,21 @@
+[package]
+name = "prismcubemc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 异步运行时：全功能特性，包含 process、net、time、signal 等所有模块
+tokio = { version = "1", features = ["full"] }
+
+# 结构化日志框架
+tracing = "0.1"
+
+# 日志订阅器：将 tracing 的日志输出到控制台
+tracing-subscriber = "0.3"
+
+# 高效字节缓冲区：网络 I/O 的零拷贝操作基础
+bytes = "1"
+
+# UUID 生成：v4 版本用于生成 session_token
+# 每个外部子进程启动时，主进程生成唯一 Token 注入其环境变量
+uuid = { version = "1", features = ["v4"] }
