@@ -1,0 +1,38 @@
+name: Build PrismCubeMC
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-rust:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 拉取你的代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 在云端准备 Rust 环境
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      # 3. 缓存 Rust 依赖（防止烧干每月2000分钟的免费额度）
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rust-core -> target"
+
+      # 4. 编译你的核心
+      - name: Build Rust Core
+        run: |
+          cd rust-core
+          cargo build --release
+
+      # 5. 把编译好的 Linux 可执行文件打包上传，方便你下载到云服务器
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prism-core-linux
+          path: rust-core/target/release/prismcubemc
